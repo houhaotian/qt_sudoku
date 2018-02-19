@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/new/prefix1">
+        <file alias="mainico">images/mainTitleIcon.png</file>
+        <file alias="loginLogo">images/qAction1Icon.png</file>
+        <file alias="mainTitleIcon">images/ec7cf91a557e5b627e9f87844949e49b.jpg</file>
+        <file alias="titlelogo">images/u=2223212381,1267679297&amp;fm=27&amp;gp=0.jpg</file>
+        <file alias="lgi">images/timg.jpg</file>
+        <file alias="closeBtn">images/my_title_bar_close.png</file>
+        <file alias="closeBtnWhite">images/my_title_bar_close_white.png</file>
+    </qresource>
+</RCC>
