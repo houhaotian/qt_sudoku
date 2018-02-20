@@ -29,13 +29,15 @@ SOURCES += \
         mainwindow.cpp \
     logindialog.cpp \
     publicTitleBar.cpp \
-    aboutdialog.cpp
+    aboutdialog.cpp \
+    mySudoku/mySudoku.cpp
 
 HEADERS += \
         mainwindow.h \
     logindialog.h \
     publicTitleBar.h \
-    aboutdialog.h
+    aboutdialog.h \
+    mySudoku/mySudoku.h
 
 FORMS += \
         mainwindow.ui \
