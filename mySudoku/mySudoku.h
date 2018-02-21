@@ -13,6 +13,7 @@ public:
 	
 	void chessBoardInit(int engineCount);
 	void printChessBoard();
+    const vint & operator[](int x)const { return chess[x]; }//运算符重载
 
 private:
 	vvint chess;

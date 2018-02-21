@@ -5,9 +5,11 @@
 #include <QLabel>
 #include <QMouseEvent>
 #include <QGridLayout>
+#include <QPainter>
 
 
 
+#include "mySudoku/mySudoku.h"
 #include "publictitlebar.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -16,69 +18,37 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    //去掉标题栏
-    this->setWindowFlags(Qt::FramelessWindowHint);
-
-    publicTitleBar *titleBar = new publicTitleBar;
-    titleBar->setCloseBtnBg("/new/prefix1/closeBtn");
-    titleBar->setTitle("享用游戏吧");
-    titleBar->setIcon("/new/prefix1/loginLogo");
-
-    QVBoxLayout* upLayout = new QVBoxLayout;
-    upLayout->setContentsMargins(0, 0, 0, 0);
-    upLayout->setSpacing(0);
-    upLayout->addWidget(titleBar);
-    upLayout->addStretch();
-    ui->up->setLayout(upLayout);
-
-
+    mySudoku chessBoard;
     QGridLayout* cboardLayout = new QGridLayout;
     QString temp;
+
     for(int i = 0; i < 9; ++i)
     {
         for(int j = 0; j < 9; ++j)
         {
             chess[i][j].setMinimumSize(30, 30);
-         //   b[i][j]->setFont(ft2);
             cboardLayout->addWidget(&chess[i][j], i, j);
             chess[i][j].setAccessibleName(QString::number(i * 10 + j));
-
-            chess[i][j].setText(temp.setNum(j));
+            chess[i][j].setText(temp.setNum(chessBoard[i][j]));
          //   connect(b[i][j],SIGNAL(clicked()),this,SLOT(tablebuttonClicked()));
-            chess[i][j].setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
-            chess[i][j].setStyleSheet("background-color: #3366CC;");
+
+            chess[i][j].setStyleSheet(QLatin1String("background-color: #3366CC;\n"
+                                        "font: 14pt \"Microsoft YaHei UI\";\n"
+                                        "color: #ffffff;"));
         }
     }
 
-
-
-    cboardLayout->setMargin(1);
-    cboardLayout->setVerticalSpacing(1);
-    cboardLayout->setHorizontalSpacing(1);
+    cboardLayout->setMargin(2);
+    cboardLayout->setVerticalSpacing(2);
+    cboardLayout->setHorizontalSpacing(2);
     for(int i = 0; i < 9; ++i)
     {
-        cboardLayout->setColumnStretch(i,1);
-        cboardLayout->setRowStretch(i,1);
+        cboardLayout->setColumnStretch(i,0);
+        cboardLayout->setRowStretch(i,0);
     }
-    ui->down->setLayout(cboardLayout);
 
+    ui->centralWidget->setLayout(cboardLayout);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    connect(titleBar, SIGNAL(clickedCloseButton()), this, SLOT(close()));
 }
 
 MainWindow::~MainWindow()
@@ -89,38 +59,35 @@ MainWindow::~MainWindow()
 
 
 
-
-
-
-
-
-
-
-
-
-
-void MainWindow::mousePressEvent(QMouseEvent *event)
+void MainWindow::paintEvent(QPaintEvent *)
 {
-    mIsMousePressed = true;
-    if (event->button() == Qt::LeftButton)
+    //    int bm=ui->menuBar->geometry().bottom();
+    QPainter painter(this);
+    QPen penType;
+    penType.setWidth(3);
+    penType.setColor(Qt::red);
+    painter.setPen(penType);
+    /*   painter.drawLine(ui->centralWidget->geometry().x(),ui->centralWidget->geometry().y(),
+                         ui->centralWidget->geometry().x()+100,ui->centralWidget->geometry().y()+100
+                         );
+    */
+
+    for (int i = 3; i < 8; i += 3)
     {
-        mLastDragPos = event->globalPos() - frameGeometry().topLeft();
-        event->accept();
+        int x1 = (chess[0][i].geometry().left() + chess[0][i - 1].geometry().right()) / 2;
+        int y1 = chess[0][i].geometry().top();
+        int y2 = chess[8][i].geometry().bottom();
+        //    painter.drawLine( x1+1 ,y1+2+bm,x1+1,y2+bm );
+        painter.drawLine(x1 + 1, y1 + 2, x1 + 1, y2);
+
     }
-}
-
-void MainWindow::mouseReleaseEvent(QMouseEvent *)
-{
-    mIsMousePressed = false;
-}
-
-void MainWindow::mouseMoveEvent(QMouseEvent *event)
-{
-    if (event->buttons() & Qt::LeftButton)
+    for (int i = 3; i < 8; i += 3)
     {
-        if (mIsMousePressed) {
-            this->move(event->globalPos() - mLastDragPos);
-            event->accept();
-        }
+        int y1 = (chess[i][0].geometry().top() + chess[i - 1][0].geometry().bottom()) / 2;
+        int x1 = chess[i][0].geometry().left();
+        int x2 = chess[i][8].geometry().right();
+        //  painter.drawLine( x1+2 ,y1+1+bm,x2-2,y1+1+bm );
+        painter.drawLine(x1 + 2, y1 + 1, x2 - 2, y1 + 1);
     }
+
 }

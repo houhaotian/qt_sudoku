@@ -54,3 +54,5 @@ void publicTitleBar::setCloseBtnBg(const QString &imgPath)
     qss.append(QString("QToolButton:pressed{border-style:none;background:url(:%1);background-position:right;}").arg(imgPath));
     mClose->setStyleSheet(qss);
 }
+
+

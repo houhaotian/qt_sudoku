@@ -22,16 +22,12 @@ signals:
 
 private slots:
 
+
 protected:
-    virtual void mousePressEvent(QMouseEvent *event);
-    virtual void mouseReleaseEvent(QMouseEvent *event);
-    virtual void mouseMoveEvent(QMouseEvent *event);
-
-
+     virtual void paintEvent(QPaintEvent *);
 private:
     Ui::MainWindow *ui;
-    bool mIsMousePressed;
-    QPoint mLastDragPos;
+
 
     QPushButton chess[9][9];
 

@@ -25,6 +25,7 @@ private:
     QLabel* mIcon;
     QLabel* mTitle;
     QToolButton* mClose;
+
 };
 
 #endif // PUBLICTITLEBAR_H
