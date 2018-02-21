@@ -9,7 +9,7 @@
 
 
 
-loginDialog::loginDialog(QWidget *parent) :
+LoginDialog::LoginDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::loginDialog)
 {
@@ -35,14 +35,14 @@ loginDialog::loginDialog(QWidget *parent) :
     connect(titleBar, SIGNAL(clickedCloseButton()), this, SLOT(close()));
 }
 
-loginDialog::~loginDialog()
+LoginDialog::~LoginDialog()
 {
     delete ui;
 }
 
 
 
-void loginDialog::setFlatButton(QPushButton *btn,
+void LoginDialog::setFlatButton(QPushButton *btn,
                            QString normalColor,
                            QString normalTextColor,
                            QString hoverColor,
@@ -59,19 +59,19 @@ void loginDialog::setFlatButton(QPushButton *btn,
     btn->setStyleSheet(qss.join(""));
 }
 
-void loginDialog::on_startButton_clicked()
+void LoginDialog::on_startButton_clicked()
 {
     accept();
 }
 
-void loginDialog::on_aboutButton_clicked()
+void LoginDialog::on_aboutButton_clicked()
 {
-    aboutDialog abtDlg;
+    AboutDialog abtDlg;
     abtDlg.exec();
 }
 
 
-void loginDialog::mousePressEvent(QMouseEvent *event)
+void LoginDialog::mousePressEvent(QMouseEvent *event)
 {
     mIsMousePressed = true;
     if (event->button() == Qt::LeftButton)
@@ -81,12 +81,12 @@ void loginDialog::mousePressEvent(QMouseEvent *event)
     }
 }
 
-void loginDialog::mouseReleaseEvent(QMouseEvent *)
+void LoginDialog::mouseReleaseEvent(QMouseEvent *)
 {
     mIsMousePressed = false;
 }
 
-void loginDialog::mouseMoveEvent(QMouseEvent *event)
+void LoginDialog::mouseMoveEvent(QMouseEvent *event)
 {
     if (event->buttons() & Qt::LeftButton)
     {

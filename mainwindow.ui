@@ -44,7 +44,14 @@
      <height>25</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menu">
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(51, 102, 204);
+color: rgb(255, 255, 255);</string>
+   </property>
+   <widget class="QMenu" name="newGame">
+    <property name="styleSheet">
+     <string notr="true">selection-color: rgb(85, 85, 255);E</string>
+    </property>
     <property name="title">
      <string>新游戏</string>
     </property>
@@ -64,17 +71,42 @@
      <string>统计</string>
     </property>
    </widget>
-   <widget class="QMenu" name="menu_5">
+   <widget class="QMenu" name="others">
     <property name="title">
-     <string>关于</string>
+     <string>其它</string>
     </property>
    </widget>
-   <addaction name="menu"/>
+   <addaction name="newGame"/>
    <addaction name="menu_2"/>
    <addaction name="menu_3"/>
    <addaction name="menu_4"/>
-   <addaction name="menu_5"/>
+   <addaction name="others"/>
   </widget>
+  <action name="easyStart">
+   <property name="text">
+    <string>简单</string>
+   </property>
+  </action>
+  <action name="normalStart">
+   <property name="text">
+    <string>中等</string>
+   </property>
+  </action>
+  <action name="hardStart">
+   <property name="text">
+    <string>困难</string>
+   </property>
+  </action>
+  <action name="masterStart">
+   <property name="text">
+    <string>大师</string>
+   </property>
+  </action>
+  <action name="about">
+   <property name="text">
+    <string>关于</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>

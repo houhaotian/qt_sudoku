@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2018-02-10T15:19:17
+# Project created by QtCreator 2018-01-23T14:13:58
 #
 #-------------------------------------------------
 
@@ -8,7 +8,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = demo2
+TARGET = qtdemo1
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -22,29 +22,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-#RC_ICONS = QAppIcon.ico
 
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    publicTitleBar.cpp \
-    logindialog.cpp \
-    aboutdialog.cpp \
-    mySudoku/mysudoku.cpp \
-    mySudoku/hardlevel.cpp
+    mysudoku.cpp
 
 HEADERS += \
         mainwindow.h \
-    publicTitleBar.h \
-    logindialog.h \
-    aboutdialog.h \
-    mySudoku/mysudoku.h \
-    mySudoku/hardlevel.h
+    mysudoku.h
 
 FORMS += \
-        mainwindow.ui \
-    aboutdialog.ui \
-    logindialog.ui
+        mainwindow.ui
 
 RESOURCES += \
-    resource.qrc
+    mainwindowicon.qrc

@@ -6,7 +6,7 @@
 #include "publictitlebar.h"
 
 
-aboutDialog::aboutDialog(QWidget *parent) :
+AboutDialog::AboutDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::aboutDialog)
 {
@@ -31,12 +31,12 @@ aboutDialog::aboutDialog(QWidget *parent) :
 
 }
 
-aboutDialog::~aboutDialog()
+AboutDialog::~AboutDialog()
 {
     delete ui;
 }
 
-void aboutDialog::mousePressEvent(QMouseEvent *event)
+void AboutDialog::mousePressEvent(QMouseEvent *event)
 {
     mIsMousePressed = true;
     if (event->button() == Qt::LeftButton)
@@ -46,12 +46,12 @@ void aboutDialog::mousePressEvent(QMouseEvent *event)
     }
 }
 
-void aboutDialog::mouseReleaseEvent(QMouseEvent *)
+void AboutDialog::mouseReleaseEvent(QMouseEvent *)
 {
     mIsMousePressed = false;
 }
 
-void aboutDialog::mouseMoveEvent(QMouseEvent *event)
+void AboutDialog::mouseMoveEvent(QMouseEvent *event)
 {
     if (event->buttons() & Qt::LeftButton)
     {

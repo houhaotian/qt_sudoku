@@ -7,13 +7,13 @@ namespace Ui {
 class aboutDialog;
 }
 
-class aboutDialog : public QDialog
+class AboutDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit aboutDialog(QWidget *parent = 0);
-    ~aboutDialog();
+    explicit AboutDialog(QWidget *parent = 0);
+    ~AboutDialog();
 
 protected:
     virtual void mousePressEvent(QMouseEvent *event);

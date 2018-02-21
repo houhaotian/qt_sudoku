@@ -7,13 +7,13 @@ namespace Ui {
 class loginDialog;
 }
 
-class loginDialog : public QDialog
+class LoginDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit loginDialog(QWidget *parent = 0);
-    ~loginDialog();
+    explicit LoginDialog(QWidget *parent = 0);
+    ~LoginDialog();
 
 protected:
     void setFlatButton(QPushButton *btn, QString normalColor,

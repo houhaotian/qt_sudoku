@@ -1,41 +1,54 @@
-#include "mySudoku.h"
+#include "mysudoku.h"
 #include <iostream>
 #include <ctime>
 #include <random>
 #include <wtypes.h>
 
+#include "hardlevel.h"
+
 using namespace std;
 
-mySudoku::mySudoku() 
+MySudoku::MySudoku(int x):gameLevel(x)
 {
 	chess = {
-		{ 1,2,3,4,5,6,7,8,9 },
-		{ 4,5,6,7,8,9,1,2,3 },
-		{ 7,8,9,1,2,3,4,5,6 },
-		{ 2,3,4,5,6,7,8,9,1 },
-		{ 5,6,7,8,9,1,2,3,4 },
-		{ 8,9,1,2,3,4,5,6,7 },
-		{ 3,4,5,6,7,8,9,1,2 },
-		{ 6,7,8,9,1,2,3,4,5 },
-		{ 9,1,2,3,4,5,6,7,8 }
+        {8, 7, 4, 6, 3, 1, 5, 9, 2},
+        {5, 9, 6, 7, 2, 8, 4, 3, 1},
+        {2, 3, 1, 4, 5, 9, 6, 8, 7},
+        {4, 8, 2, 1, 9, 6, 7, 5, 3},
+        {7, 6, 5, 3, 8, 4, 2, 1, 9},
+        {9, 1, 3, 5, 7, 2, 8, 4, 6},
+        {3, 2, 9, 8, 6, 5, 1, 7, 4},
+        {1, 5, 7, 2, 4, 3, 9, 6, 8},
+        {6, 4, 8, 9, 1, 7, 3, 2, 5}
 	};
-	chessBoardInit(15);
+    changeTime = 15;
+    chessBoardInit(changeTime);
+
+    HardLevel lev(gameLevel);
+    for(int a=0;a<9;++a)
+    {
+        for(int b=0;b<9;++b)
+        {
+            if(!lev[a][b])//如果不为1
+                chess[a][b]=0;//就把值设为0，即不显示
+        }
+    }
 }
 
 
-mySudoku::~mySudoku()
+MySudoku::~MySudoku()
 {
 }
 
-void mySudoku::chessBoardInit(int engineCount)
+void MySudoku::chessBoardInit(int engineTime)
 {
-	chessBoardChangeTwoNum(engineCount);
-	changeRowNCon(engineCount);
-	changeThreeRowNCol(engineCount);
+    changeTwoNum(engineTime);
+    changeRowNCon(engineTime);
+    changeThreeRowNCol(engineTime);
 }
 
 /*把棋盘中所有的两个数x，y交换*/
-void mySudoku::_changeValue(int x, int y)
+void MySudoku::_changeValue(int x, int y)
 {
 	for (vint & v1 : chess)
 		for (int &v2 : v1)
@@ -43,13 +56,13 @@ void mySudoku::_changeValue(int x, int y)
 			v2 = v2 == x ? y : (v2 == y ? x : v2);
 		}
 }
-void mySudoku::chessBoardChangeTwoNum(int engineCount)
+void MySudoku::changeTwoNum(int engineTime)
 {
 	int a, b;
 	std::default_random_engine e((UINT)time(0));//c++11，头文件random，随机数种子
 	std::uniform_int_distribution<int> u(1, 9);//c++11，随机数生成，用u(e)产生一个1-9之间的随机数
 
-	for (int i = 0; i < engineCount; ++i)//变换engineCount次
+    for (int i = 0; i < engineTime; ++i)//变换engineTime次
 	{
 		a = u(e), b = u(e);//两个1-9之间的随机数
 		if (a != b)
@@ -59,13 +72,13 @@ void mySudoku::chessBoardChangeTwoNum(int engineCount)
 }
 
 /*交换行*/
-void mySudoku::_swapRow(int x, int y)
+void MySudoku::_swapRow(int x, int y)
 {
 	using std::swap;
 	swap(chess[x], chess[y]);
 }
 /*交换列*/
-void mySudoku::_swapCol(int x, int y)
+void MySudoku::_swapCol(int x, int y)
 {
 	for (int i = 0; i < 9; ++i)
 	{
@@ -74,13 +87,13 @@ void mySudoku::_swapCol(int x, int y)
 	}
 }
 /*交换行和列必须在小方格范围内交换才合法：0~2，3~5，6~8*/
-void mySudoku::changeRowNCon(int engineCount)
+void MySudoku::changeRowNCon(int engineTime)
 {
 	std::default_random_engine e((UINT)time(0));
 	std::uniform_int_distribution<int>u(0, 2);
 	int bases, x, y;
 
-	for (int i = 0; i < engineCount; ++i)
+    for (int i = 0; i < engineTime; ++i)
 	{
 		bases = 3 * u(e), x = bases + u(e), y = bases + u(e);
 		if (x != y)
@@ -92,24 +105,24 @@ void mySudoku::changeRowNCon(int engineCount)
 }
 
 /*x,y必须是0,3,6三个数*/
-void mySudoku::_swapThreeCol(int x, int y)
+void MySudoku::_swapThreeCol(int x, int y)
 {
 	for (int i = 0; i < 3; ++i)
 		_swapCol(x + i, y + i);
 }
 /*x,y必须是0,3,6三个数*/
-void mySudoku::_swapThreeRow(int x, int y)
+void MySudoku::_swapThreeRow(int x, int y)
 {
 	for (int i = 0; i < 3; ++i)
 		_swapRow(x + i, y + i);
 }
 
-void mySudoku::changeThreeRowNCol(int engineCount)
+void MySudoku::changeThreeRowNCol(int engineTime)
 {
 	std::default_random_engine e((UINT)time(0));
 	std::uniform_int_distribution<int>u(0, 2);
 	int x, y;
-	for (int i = 0; i < engineCount; ++i)
+    for (int i = 0; i < engineTime; ++i)
 	{
 		x = u(e), y = u(e);
 		if (x != y)
@@ -121,7 +134,7 @@ void mySudoku::changeThreeRowNCol(int engineCount)
 
 }
 
-void mySudoku::printChessBoard()
+void MySudoku::printChessBoard()
 {
 	int i = 0;
 	for (vint & v1 : chess) {

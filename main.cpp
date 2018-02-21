@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
     a.setWindowIcon(QIcon(":/new/prefix1/loginLogo"));
 
 
-    loginDialog* login = new loginDialog;
+    LoginDialog* login = new LoginDialog;
     login->move((QApplication::desktop()->width() - login->width()) / 2, (QApplication::desktop()->height() - login->height()) / 2);
     login->exec();
 
