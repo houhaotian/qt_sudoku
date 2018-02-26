@@ -30,15 +30,19 @@ private slots:
     void newGameClicked();
     void chessBoardClicked();
 protected:
-     virtual void paintEvent(QPaintEvent *);
+    virtual void paintEvent(QPaintEvent *);
+    virtual void keyPressEvent(QKeyEvent *event);
+
 private:
     Ui::MainWindow *ui;
     QPushButton chess[9][9];
-    MySudoku *chessBoard;
+    MySudoku *chessBoard;//生成的数独数字
     int nowSelectedNum;
+    int onPressingBoard;
 private:
     void highLightSelectedButtons(int aimmedNum);
     void resetChessboard(MySudoku &chessB);
+    void addOneWrong();
 };
 
 #endif // MAINWINDOW_H

@@ -23,7 +23,7 @@ MySudoku::MySudoku(int x):gameLevel(x)
 	};
     changeTime = 15;
     chessBoardInit(changeTime);
-
+    truth = chess;
     HardLevel lev(gameLevel);
     for(int a = 0; a < 9; ++a)
     {

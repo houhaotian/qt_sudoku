@@ -97,7 +97,7 @@ void MainWindow::paintEvent(QPaintEvent *)
         int x1 = (chess[0][i].geometry().left() + chess[0][i - 1].geometry().right()) / 2;
         int y1 = chess[0][i].geometry().top();
         int y2 = chess[8][i].geometry().bottom();
-        //    painter.drawLine( x1+1 ,y1+2+bm,x1+1,y2+bm );
+
         painter.drawLine(x1 + 1, y1 + 2, x1 + 1, y2);
 
     }
@@ -106,7 +106,7 @@ void MainWindow::paintEvent(QPaintEvent *)
         int y1 = (chess[i][0].geometry().top() + chess[i - 1][0].geometry().bottom()) / 2;
         int x1 = chess[i][0].geometry().left();
         int x2 = chess[i][8].geometry().right();
-        //  painter.drawLine( x1+2 ,y1+1+bm,x2-2,y1+1+bm );
+
         painter.drawLine(x1 + 2, y1 + 1, x2 - 2, y1 + 1);
     }
 
@@ -161,12 +161,15 @@ void MainWindow::chessBoardClicked()
 {
     QPushButton * btn = qobject_cast<QPushButton *>(sender());
     int n = btn->accessibleName().toInt();
-    int i=n/10,j=n%10;
-    int x_t=i, y_t=j;
+    int i = n/10,j = n%10;
+    int x_t = i, y_t = j;
     int aimmedNum = chess[x_t][y_t].text().toInt();
     if(aimmedNum == 0)
     {
-        /*填数*/
+        onPressingBoard = n;
+        //   chess[x_t][y_t].setStyleSheet(QLatin1String("background-color: #ffaa7f;\n"
+        //                                         "font: 14pt \"Microsoft YaHei UI\";\n"
+        //                                       "color: #ffffff;"));
         return;
     }
     else/*高亮选中的值*/
@@ -219,4 +222,32 @@ void MainWindow::highLightSelectedButtons(int aimmedNum)
         else
         nowSelectedNum = aimmedNum;
     }
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    static int wrongtime = 0;
+    QString temp(event->key());
+    int n = onPressingBoard;
+    int i = n/10,j = n%10;
+    int x_t = i, y_t = j;
+    vvint & chessB = chessBoard->truth;
+
+    if(chessB[x_t][y_t] == temp.toInt())//如果正确则填入
+    {
+        chess[x_t][y_t].setText(temp);
+    }
+    else
+    {    //错误统计加一
+        addOneWrong();
+        wrongtime++;
+    }
+}
+
+void MainWindow::addOneWrong()
+{
+    QLabel *wrongLabel = new QLabel;
+    wrongLabel->setGeometry(QRect(90, 40, 91, 61));
+    wrongLabel->setStyleSheet(QStringLiteral("image: url(:/new/prefix1/mainico);"));
+
 }

@@ -14,9 +14,10 @@ public:
     void chessBoardInit(int engineTime);
 	void printChessBoard();
     const vint & operator[](int x)const { return chess[x]; }//运算符重载
-
+    vvint truth;
 private:
 	vvint chess;
+
     int changeTime;//初始化时做变换的次数
     int gameLevel;//难度
 private:
