@@ -18,10 +18,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    this->setWindowTitle(tr("我的小数独"));
+
 #if 1
-   chessBoard = new MySudoku(HardLevel::master);
-   MySudoku & chessB=*chessBoard;
-   QGridLayout* cboardLayout = new QGridLayout;
+    chessBoard = new MySudoku(HardLevel::easy);
+    MySudoku & chessB=*chessBoard;
+    QGridLayout* cboardLayout = new QGridLayout;
     QString temp;
 
     for(int i = 0; i < 9; ++i)
@@ -31,19 +33,21 @@ MainWindow::MainWindow(QWidget *parent) :
             chess[i][j].setFixedSize(30, 30);
             cboardLayout->addWidget(&chess[i][j], i, j);
             chess[i][j].setAccessibleName(QString::number(i * 10 + j));
+
             chess[i][j].setText(temp.setNum(chessB[i][j]));
             if(0 == chessB[i][j])
             {
-                 chess[i][j].setText("");
+                chess[i][j].setText("");
             }
-         //   connect(b[i][j],SIGNAL(clicked()),this,SLOT(tablebuttonClicked()));
+            connect(&chess[i][j], SIGNAL(clicked()), this, SLOT(chessBoardClicked()));
 
             chess[i][j].setStyleSheet(QLatin1String("background-color: #3366CC;\n"
-                                        "font: 14pt \"Microsoft YaHei UI\";\n"
-                                        "color: #ffffff;"));
+                                                    "font: 14pt \"Microsoft YaHei UI\";\n"
+                                                    "color: #ffffff;"));
         }
     }
-    cboardLayout->setMargin(2);
+    nowSelectedNum = 0;//游戏重新开始
+    cboardLayout->setMargin(100);
     cboardLayout->setVerticalSpacing(2);
     cboardLayout->setHorizontalSpacing(2);
     for(int i = 0; i < 9; ++i)
@@ -108,6 +112,7 @@ void MainWindow::paintEvent(QPaintEvent *)
 
 }
 
+
 void MainWindow::onAboutTriggered()
 {
     AboutDialog abtDlg;
@@ -119,27 +124,99 @@ void MainWindow::newGameClicked()
     delete chessBoard;
 
     QString temp;
-    QAction *incomeBtn = qobject_cast<QAction*>(sender());
+    QAction *incomeBtn = qobject_cast<QAction *>(sender());
     temp = incomeBtn->text();//获得传过来的难度等级
     int incomeLevel;
-    for(int i=0;i<4;++i)
-    {
+    for(int i = 0; i < 4; ++i) {
         if(temp == str_hardclass[i])
-           incomeLevel = i;
+            incomeLevel = i;
     }
     chessBoard = new MySudoku(incomeLevel);
     MySudoku & chessB = *chessBoard;
 
+    resetChessboard(chessB);
+    nowSelectedNum = 0;//游戏重新开始
+}
+
+void MainWindow::resetChessboard(MySudoku & chessB)
+{
+    QString temp;
     for(int i = 0; i < 9; ++i)
     {
         for(int j = 0; j < 9; ++j)
         {
             chess[i][j].setText(temp.setNum(chessB[i][j]));
+            chess[i][j].setStyleSheet(QLatin1String("background-color: #3366CC;\n"
+                                                    "font: 14pt \"Microsoft YaHei UI\";\n"
+                                                    "color: #ffffff;"));
             if(0 == chessB[i][j])
             {
                 chess[i][j].setText("");
             }
-            //   connect(b[i][j],SIGNAL(clicked()),this,SLOT(tablebuttonClicked()));
         }
+    }
+}
+
+void MainWindow::chessBoardClicked()
+{
+    QPushButton * btn = qobject_cast<QPushButton *>(sender());
+    int n = btn->accessibleName().toInt();
+    int i=n/10,j=n%10;
+    int x_t=i, y_t=j;
+    int aimmedNum = chess[x_t][y_t].text().toInt();
+    if(aimmedNum == 0)
+    {
+        /*填数*/
+        return;
+    }
+    else/*高亮选中的值*/
+    {
+        highLightSelectedButtons(aimmedNum);
+    }
+}
+
+void MainWindow::highLightSelectedButtons(int aimmedNum)
+{
+    /*高亮选中数字*/
+    for(int i = 0; i < 9; ++i)
+    {
+        for(int j = 0; j < 9; ++j)
+        {
+            if(aimmedNum == chess[i][j].text().toInt()){
+                chess[i][j].setStyleSheet(QLatin1String("background-color: #55ff00;\n"
+                                                        "font: 14pt \"Microsoft YaHei UI\";\n"
+                                                        "color: #ffffff;"));
+            }
+        }
+    }
+
+    /*如果是刚开始游戏，则记录选中的值*/
+    if (nowSelectedNum == 0)
+    {
+        nowSelectedNum = aimmedNum;
+    }
+    /*否则还原上一次选中的值*/
+    else
+    {
+        for(int i = 0; i < 9; ++i)
+        {
+            for(int j = 0; j < 9; ++j)
+            {
+                if(nowSelectedNum == chess[i][j].text().toInt()){
+
+                    chess[i][j].setStyleSheet(QLatin1String("background-color: #3366CC;\n"
+                                                            "font: 14pt \"Microsoft YaHei UI\";\n"
+                                                            "color: #ffffff;"));
+                }
+            }
+        }
+        /*如果点击已经选中的值，则清0*/
+        if (nowSelectedNum == aimmedNum)
+        {
+            nowSelectedNum = 0;
+            return;
+        }
+        else
+        nowSelectedNum = aimmedNum;
     }
 }

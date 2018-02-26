@@ -25,12 +25,12 @@ MySudoku::MySudoku(int x):gameLevel(x)
     chessBoardInit(changeTime);
 
     HardLevel lev(gameLevel);
-    for(int a=0;a<9;++a)
+    for(int a = 0; a < 9; ++a)
     {
-        for(int b=0;b<9;++b)
+        for(int b = 0; b < 9; ++b)
         {
             if(!lev[a][b])//如果不为1
-                chess[a][b]=0;//就把值设为0，即不显示
+                chess[a][b] = 0;//就把值设为0，即不显示
         }
     }
 }
