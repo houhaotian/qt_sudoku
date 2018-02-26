@@ -7,11 +7,14 @@
 #include <QGridLayout>
 #include <QPainter>
 #include <QString>
+#include <QMessageBox>
+
 
 #include "publictitlebar.h"
 #include "aboutdialog.h"
 
-::QString str_hardclass[4]={"简单","中等","困难","地狱"};
+::QString str_hardclass[4] = { "简单","中等","困难","地狱" };
+int MainWindow::wrongTime = 0;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -22,49 +25,49 @@ MainWindow::MainWindow(QWidget *parent) :
 
 #if 1
     chessBoard = new MySudoku(HardLevel::easy);
-    MySudoku & chessB=*chessBoard;
+    MySudoku & chessB = *chessBoard;
     QGridLayout* cboardLayout = new QGridLayout;
     QString temp;
 
-    for(int i = 0; i < 9; ++i)
+    for (int i = 0; i < 9; ++i)
     {
-        for(int j = 0; j < 9; ++j)
+        for (int j = 0; j < 9; ++j)
         {
             chess[i][j].setFixedSize(30, 30);
             cboardLayout->addWidget(&chess[i][j], i, j);
             chess[i][j].setAccessibleName(QString::number(i * 10 + j));
 
             chess[i][j].setText(temp.setNum(chessB[i][j]));
-            if(0 == chessB[i][j])
+            if (0 == chessB[i][j])
             {
                 chess[i][j].setText("");
             }
             connect(&chess[i][j], SIGNAL(clicked()), this, SLOT(chessBoardClicked()));
 
             chess[i][j].setStyleSheet(QLatin1String("background-color: #3366CC;\n"
-                                                    "font: 14pt \"Microsoft YaHei UI\";\n"
-                                                    "color: #ffffff;"));
+                "font: 14pt \"Microsoft YaHei UI\";\n"
+                "color: #ffffff;"));
         }
     }
     nowSelectedNum = 0;//游戏重新开始
     cboardLayout->setContentsMargins(40, 0, 10, 10);
     cboardLayout->setVerticalSpacing(2);
     cboardLayout->setHorizontalSpacing(2);
-    for(int i = 0; i < 9; ++i)
+    for (int i = 0; i < 9; ++i)
     {
-        cboardLayout->setColumnStretch(i,0);
-        cboardLayout->setRowStretch(i,0);
+        cboardLayout->setColumnStretch(i, 0);
+        cboardLayout->setRowStretch(i, 0);
     }
     ui->right->setLayout(cboardLayout);
 #endif
 
 
     /*菜单栏新游戏*/
-    for(int i = 0; i < 4; ++i)
+    for (int i = 0; i < 4; ++i)
     {
-        QAction *hardMenu = new QAction(str_hardclass[i]);
-        ui->newGame->addAction(hardMenu);
-        connect(hardMenu, SIGNAL(triggered()), this, SLOT(newGameClicked()));
+        hardMenu[i] = new QAction(str_hardclass[i]);
+        ui->newGame->addAction(hardMenu[i]);
+        connect(hardMenu[i], SIGNAL(triggered()), this, SLOT(newGameClicked()));
     }
     /*菜单栏其它*/
     QAction *aboutMenu = new QAction("关于");
@@ -90,8 +93,8 @@ void MainWindow::paintEvent(QPaintEvent *)
     penType.setColor(Qt::red);
     painter.setPen(penType);
     /*   painter.drawLine(ui->centralWidget->geometry().x(),ui->centralWidget->geometry().y(),
-                         ui->centralWidget->geometry().x()+100,ui->centralWidget->geometry().y()+100
-                         );
+    ui->centralWidget->geometry().x()+100,ui->centralWidget->geometry().y()+100
+    );
     */
 
     for (int i = 3; i < 8; i += 3)
@@ -124,13 +127,15 @@ void MainWindow::onAboutTriggered()
 void MainWindow::newGameClicked()
 {
     delete chessBoard;
+ //   delete[] wrongLabel;
+    wrongTime = 0;
 
     QString temp;
     QAction *incomeBtn = qobject_cast<QAction *>(sender());
     temp = incomeBtn->text();//获得传过来的难度等级
     int incomeLevel;
-    for(int i = 0; i < 4; ++i) {
-        if(temp == str_hardclass[i])
+    for (int i = 0; i < 4; ++i) {
+        if (temp == str_hardclass[i])
             incomeLevel = i;
     }
     chessBoard = new MySudoku(incomeLevel);
@@ -143,15 +148,15 @@ void MainWindow::newGameClicked()
 void MainWindow::resetChessboard(MySudoku & chessB)
 {
     QString temp;
-    for(int i = 0; i < 9; ++i)
+    for (int i = 0; i < 9; ++i)
     {
-        for(int j = 0; j < 9; ++j)
+        for (int j = 0; j < 9; ++j)
         {
             chess[i][j].setText(temp.setNum(chessB[i][j]));
             chess[i][j].setStyleSheet(QLatin1String("background-color: #3366CC;\n"
-                                                    "font: 14pt \"Microsoft YaHei UI\";\n"
-                                                    "color: #ffffff;"));
-            if(0 == chessB[i][j])
+                "font: 14pt \"Microsoft YaHei UI\";\n"
+                "color: #ffffff;"));
+            if (0 == chessB[i][j])
             {
                 chess[i][j].setText("");
             }
@@ -163,10 +168,10 @@ void MainWindow::chessBoardClicked()
 {
     QPushButton * btn = qobject_cast<QPushButton *>(sender());
     int n = btn->accessibleName().toInt();
-    int i = n/10,j = n%10;
+    int i = n / 10, j = n % 10;
     int x_t = i, y_t = j;
     int aimmedNum = chess[x_t][y_t].text().toInt();
-    if(aimmedNum == 0)
+    if (aimmedNum == 0)
     {
         onPressingBoard = n;
         //   chess[x_t][y_t].setStyleSheet(QLatin1String("background-color: #ffaa7f;\n"
@@ -183,14 +188,14 @@ void MainWindow::chessBoardClicked()
 void MainWindow::highLightSelectedButtons(int aimmedNum)
 {
     /*高亮选中数字*/
-    for(int i = 0; i < 9; ++i)
+    for (int i = 0; i < 9; ++i)
     {
-        for(int j = 0; j < 9; ++j)
+        for (int j = 0; j < 9; ++j)
         {
-            if(aimmedNum == chess[i][j].text().toInt()){
+            if (aimmedNum == chess[i][j].text().toInt()) {
                 chess[i][j].setStyleSheet(QLatin1String("background-color: #55aa7f;\n"
-                                                        "font: 14pt \"Microsoft YaHei UI\";\n"
-                                                        "color: #000000;"));
+                    "font: 14pt \"Microsoft YaHei UI\";\n"
+                    "color: #000000;"));
             }
         }
     }
@@ -203,15 +208,15 @@ void MainWindow::highLightSelectedButtons(int aimmedNum)
     /*否则还原上一次选中的值*/
     else
     {
-        for(int i = 0; i < 9; ++i)
+        for (int i = 0; i < 9; ++i)
         {
-            for(int j = 0; j < 9; ++j)
+            for (int j = 0; j < 9; ++j)
             {
-                if(nowSelectedNum == chess[i][j].text().toInt()){
+                if (nowSelectedNum == chess[i][j].text().toInt()) {
 
                     chess[i][j].setStyleSheet(QLatin1String("background-color: #3366CC;\n"
-                                                            "font: 14pt \"Microsoft YaHei UI\";\n"
-                                                            "color: #ffffff;"));
+                        "font: 14pt \"Microsoft YaHei UI\";\n"
+                        "color: #ffffff;"));
                 }
             }
         }
@@ -222,7 +227,7 @@ void MainWindow::highLightSelectedButtons(int aimmedNum)
             return;
         }
         else
-        nowSelectedNum = aimmedNum;
+            nowSelectedNum = aimmedNum;
     }
 }
 
@@ -231,12 +236,12 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
     QString temp(event->key());
     int n = onPressingBoard;
-    int i = n/10,j = n%10;
+    int i = n / 10, j = n % 10;
     int x_t = i, y_t = j;
     vvint & chessB = chessBoard->truth;
     static int score = 0;
-    static int wrongtime = 0;
-    if(chessB[x_t][y_t] == temp.toInt())//如果输入正确则填入
+
+    if (chessB[x_t][y_t] == temp.toInt())//如果输入正确则填入
     {
         chess[x_t][y_t].setText(temp);
         score += 200;
@@ -245,14 +250,28 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     else
     {    //错误统计加一
         addOneWrong();
-        wrongtime++;
     }
 }
 
 void MainWindow::addOneWrong()
 {
-    QLabel * wrongLabel = new QLabel(ui->up);
-    wrongLabel->setGeometry(QRect(ui->up->x()+10, ui->up->y()+10, 91, 61));
-    wrongLabel->setStyleSheet(QStringLiteral("image: url(:/new/prefix1/mainico);"));
+    if (wrongTime > 2)  //最多错三次
+    {
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox ::question(this, tr("你输了！！！"),"是否重新开始？",QMessageBox::Ok|QMessageBox::Cancel);
+        if(reply == QMessageBox::Ok)
+        {
+            delete [] wrongLabel;
+            wrongTime = 0;
+        }
+        return;
+    }
 
+    wrongLabel[wrongTime] = new QLabel(ui->up);
+
+    wrongLabel[wrongTime]->setGeometry(QRect(ui->label_2->x() + 50 * (wrongTime + 1), ui->label_2->y(), 40, 40));
+    wrongLabel[wrongTime]->setStyleSheet(QStringLiteral("image: url(:/new/prefix1/mainico);"));
+    wrongLabel[wrongTime]->setVisible(1);
+
+    ++wrongTime;
 }

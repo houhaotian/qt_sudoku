@@ -3,6 +3,9 @@
 
 #include <QMainWindow>
 #include <QPushButton>
+#include <QLabel>
+#include <QAction>
+
 
 
 #include "mySudoku/mysudoku.h"
@@ -24,7 +27,7 @@ public:
 
 
 signals:
-
+    void clickedBeginNewGameButton();
 private slots:
     void onAboutTriggered();
     void newGameClicked();
@@ -39,8 +42,9 @@ private:
     MySudoku *chessBoard;//生成的数独数字
     int nowSelectedNum;
     int onPressingBoard;
-
-
+    static int wrongTime;
+    QLabel *wrongLabel[4];
+    QAction * hardMenu[4];
 private:
     void highLightSelectedButtons(int aimmedNum);
     void resetChessboard(MySudoku &chessB);
