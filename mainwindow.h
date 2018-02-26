@@ -39,6 +39,8 @@ private:
     MySudoku *chessBoard;//生成的数独数字
     int nowSelectedNum;
     int onPressingBoard;
+
+
 private:
     void highLightSelectedButtons(int aimmedNum);
     void resetChessboard(MySudoku &chessB);

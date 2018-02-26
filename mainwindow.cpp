@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent) :
         }
     }
     nowSelectedNum = 0;//游戏重新开始
-    cboardLayout->setMargin(100);
+    cboardLayout->setContentsMargins(40, 0, 10, 10);
     cboardLayout->setVerticalSpacing(2);
     cboardLayout->setHorizontalSpacing(2);
     for(int i = 0; i < 9; ++i)
@@ -55,8 +55,9 @@ MainWindow::MainWindow(QWidget *parent) :
         cboardLayout->setColumnStretch(i,0);
         cboardLayout->setRowStretch(i,0);
     }
-    ui->centralWidget->setLayout(cboardLayout);
+    ui->right->setLayout(cboardLayout);
 #endif
+
 
     /*菜单栏新游戏*/
     for(int i = 0; i < 4; ++i)
@@ -69,6 +70,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QAction *aboutMenu = new QAction("关于");
     ui->others->addAction(aboutMenu);
     connect(aboutMenu, SIGNAL(triggered()), this, SLOT(onAboutTriggered()));
+
 }
 
 MainWindow::~MainWindow()
@@ -186,9 +188,9 @@ void MainWindow::highLightSelectedButtons(int aimmedNum)
         for(int j = 0; j < 9; ++j)
         {
             if(aimmedNum == chess[i][j].text().toInt()){
-                chess[i][j].setStyleSheet(QLatin1String("background-color: #55ff00;\n"
+                chess[i][j].setStyleSheet(QLatin1String("background-color: #55aa7f;\n"
                                                         "font: 14pt \"Microsoft YaHei UI\";\n"
-                                                        "color: #ffffff;"));
+                                                        "color: #000000;"));
             }
         }
     }
@@ -226,16 +228,19 @@ void MainWindow::highLightSelectedButtons(int aimmedNum)
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    static int wrongtime = 0;
+
     QString temp(event->key());
     int n = onPressingBoard;
     int i = n/10,j = n%10;
     int x_t = i, y_t = j;
     vvint & chessB = chessBoard->truth;
-
-    if(chessB[x_t][y_t] == temp.toInt())//如果正确则填入
+    static int score = 0;
+    static int wrongtime = 0;
+    if(chessB[x_t][y_t] == temp.toInt())//如果输入正确则填入
     {
         chess[x_t][y_t].setText(temp);
+        score += 200;
+        ui->score->setNum(score);
     }
     else
     {    //错误统计加一
@@ -246,8 +251,8 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
 void MainWindow::addOneWrong()
 {
-    QLabel *wrongLabel = new QLabel;
-    wrongLabel->setGeometry(QRect(90, 40, 91, 61));
+    QLabel * wrongLabel = new QLabel(ui->up);
+    wrongLabel->setGeometry(QRect(ui->up->x()+10, ui->up->y()+10, 91, 61));
     wrongLabel->setStyleSheet(QStringLiteral("image: url(:/new/prefix1/mainico);"));
 
 }
