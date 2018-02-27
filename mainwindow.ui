@@ -31,9 +31,6 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <property name="styleSheet">
-   <string notr="true">background-color: rgb(255, 255, 255);</string>
-  </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout" stretch="1,6">
     <property name="leftMargin">
@@ -121,30 +118,6 @@
           </property>
           <property name="text">
            <string>得分</string>
-          </property>
-         </widget>
-         <widget class="QLabel" name="score">
-          <property name="geometry">
-           <rect>
-            <x>10</x>
-            <y>50</y>
-            <width>54</width>
-            <height>21</height>
-           </rect>
-          </property>
-          <property name="font">
-           <font>
-            <family>Consolas</family>
-            <pointsize>11</pointsize>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">color: rgb(245, 245, 245);r</string>
-          </property>
-          <property name="text">
-           <string>0</string>
           </property>
          </widget>
         </widget>
