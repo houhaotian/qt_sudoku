@@ -8,7 +8,7 @@
 #include <QPainter>
 #include <QString>
 #include <QMessageBox>
-
+#include <QDebug>
 
 #include "publictitlebar.h"
 #include "aboutdialog.h"
@@ -36,6 +36,12 @@ MainWindow::MainWindow(QWidget *parent) :
     //添加score栏
     putOnScoreLabel();
 
+    timerId = startTimer(1000);
+    timerCount = 0;
+
+
+
+
 }
 
 MainWindow::~MainWindow()
@@ -53,6 +59,12 @@ void MainWindow::initSudokuChessBoard()
     QGridLayout* cboardLayout = new QGridLayout;
     QString temp;
 
+    for(int i = 0; i < 9; ++i)
+    {
+        oneNumCorrectCount[i] = 0;
+        qDebug() << oneNumCorrectCount[i];
+    }
+
     for (int i = 0; i < 9; ++i)
     {
         for (int j = 0; j < 9; ++j)
@@ -65,6 +77,7 @@ void MainWindow::initSudokuChessBoard()
             if (0 == chessB[i][j])
             {
                 ++emptyNum;
+                oneNumCorrectCount[chessB.truth[i][j]-1]++;//记录下每个数有多少个空白格子，计分用
                 chess[i][j].setText("");
             }
             connect(&chess[i][j], SIGNAL(clicked()), this, SLOT(chessBoardClicked()));
@@ -74,6 +87,8 @@ void MainWindow::initSudokuChessBoard()
                 "color: #ffffff;"));
         }
     }
+
+
     nowSelectedNum = 0;//游戏重新开始
     cboardLayout->setMargin(10);
     cboardLayout->setVerticalSpacing(2);
@@ -124,13 +139,13 @@ void MainWindow::paintEvent(QPaintEvent *)
     QPainter painter(this);
     QPen penType;
     penType.setWidth(3);
-    penType.setColor(Qt::red);
+    penType.setColor(Qt::darkBlue);
     painter.setPen(penType);
 
 
     int x0 = (ui->down->x()) + 90;
     int y0 = ui->down->y() + 38;
-  //  painter.drawLine(x0, y0, x0, 400);
+    //  painter.drawLine(x0, y0, x0, 400);
 
     int x1 = x0 + 3* 40 +7;
     painter.drawLine(x1, y0, x1 , 480);
@@ -140,6 +155,7 @@ void MainWindow::paintEvent(QPaintEvent *)
     painter.drawLine(x0 , y1, 475 , y1);
     y1 += 3* 40 + 5;
     painter.drawLine(x0 , y1, 475 , y1);
+
 #if 0
     for (int i = 3; i < 8; i += 3)
     {
@@ -180,7 +196,7 @@ void MainWindow::newGameClicked()
     QString temp;
     QAction *incomeBtn = qobject_cast<QAction *>(sender());
     temp = incomeBtn->text();//获得传过来的难度等级
-    int incomeLevel;
+    int incomeLevel = 0;
     for (int i = 0; i < 4; ++i) {
         if (temp == str_hardclass[i])
             incomeLevel = i;
@@ -196,6 +212,7 @@ void MainWindow::newGameClicked()
 void MainWindow::resetChessboard(MySudoku & chessB)
 {
     QString temp;
+    emptyNum = 0;
     for (int i = 0; i < 9; ++i)
     {
         for (int j = 0; j < 9; ++j)
@@ -207,6 +224,8 @@ void MainWindow::resetChessboard(MySudoku & chessB)
             if (0 == chessB[i][j])
             {
                 chess[i][j].setText("");
+                oneNumCorrectCount[chessB.truth[i][j]-1]++;
+                emptyNum++;
             }
         }
     }
@@ -326,18 +345,23 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     if(temp == "H")
         temp.setNum(chessB[x_t][y_t]);
 
-    if(n == -1)//没有选中空白格子
-        return;
-    if (chess[x_t][y_t].text() != "")//如果已经填入则不能再输入
+    if (n == -1 || chess[x_t][y_t].text() != "")//如果已经填入则不能再输入 //没有选中空白格子
     {
         return;
     }
 
     if (chessB[x_t][y_t] == temp.toInt())//如果输入正确则填入
     {
-
         chess[x_t][y_t].setText(temp);
         gameScore += 200;
+
+        if(--oneNumCorrectCount[temp.toInt()-1] == 0)
+        {
+            gameScore+= (3600 - timerCount)/*3600秒减当前秒数*/ * oneNumCorrectCount[temp.toInt()-1];/*当前完成的数字*/
+            gameScore+=10000;
+            qDebug()<<temp.toInt()<<" gameScore: "<<gameScore;
+        }
+
         score->setNum(gameScore);
         --emptyNum;
         if(emptyNum == 0)   //胜利
@@ -360,6 +384,15 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     else
     {    //错误统计加一
         addOneWrong();
+    }
+}
+
+void MainWindow::timerEvent(QTimerEvent *event)
+{
+    if(event->timerId() == timerId)
+    {
+        timerCount++;
+        //  qDebug() << timerId;
     }
 }
 

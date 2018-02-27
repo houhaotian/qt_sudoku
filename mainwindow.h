@@ -5,7 +5,7 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QAction>
-
+#include<QVector>
 
 
 #include "mySudoku/mysudoku.h"
@@ -33,6 +33,7 @@ private slots:
 protected:
     virtual void paintEvent(QPaintEvent *);
     virtual void keyPressEvent(QKeyEvent *event);
+    virtual void timerEvent(QTimerEvent *event);
 private:
     Ui::MainWindow *ui;
     QPushButton chess[9][9];
@@ -48,6 +49,12 @@ private:
     static int nowEmptyButtonX;
     static int nowEmptyButtonY;
     static int emptyNum;
+
+    int timerId;
+    double timerCount;
+
+    int oneNumCorrectCount[9];
+
 
 private:
     void initSudokuChessBoard();
