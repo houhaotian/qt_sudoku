@@ -37,7 +37,7 @@ private:
     Ui::MainWindow *ui;
     QPushButton chess[9][9];
     MySudoku *sudokuPower;//生成的数独数字
-    QLabel *wrongLabel[4];
+    QLabel *wrongLabel[3];
     QAction * hardMenu[4];
     QLabel *score;
 
@@ -45,7 +45,14 @@ private:
     static int onPressingBoard;
     static int wrongTime;
     static int nowGameHardLevel;
+    static int nowEmptyButtonX;
+    static int nowEmptyButtonY;
+    static int emptyNum;
+
 private:
+    void initSudokuChessBoard();
+    void putOnMenuItem();
+    void putOnScoreLabel();
     void highLightSelectedButtons(int aimmedNum);
     void resetChessboard(MySudoku &chessB);
     void addOneWrong();
