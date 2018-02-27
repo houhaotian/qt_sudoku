@@ -24,8 +24,8 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setWindowTitle(tr("我的小数独"));
 
 #if 1
-    chessBoard = new MySudoku(HardLevel::easy);
-    MySudoku & chessB = *chessBoard;
+    sudokuPower = new MySudoku(HardLevel::easy);
+    MySudoku & chessB = *sudokuPower;
     QGridLayout* cboardLayout = new QGridLayout;
     QString temp;
 
@@ -126,8 +126,12 @@ void MainWindow::onAboutTriggered()
 
 void MainWindow::newGameClicked()
 {
-    delete chessBoard;
- //   delete[] wrongLabel;
+    delete sudokuPower;
+
+    for(int i = 0; i < wrongTime; ++i)
+    {
+        delete wrongLabel[i];
+    }
     wrongTime = 0;
 
     QString temp;
@@ -138,8 +142,8 @@ void MainWindow::newGameClicked()
         if (temp == str_hardclass[i])
             incomeLevel = i;
     }
-    chessBoard = new MySudoku(incomeLevel);
-    MySudoku & chessB = *chessBoard;
+    sudokuPower = new MySudoku(incomeLevel);
+    MySudoku & chessB = *sudokuPower;
 
     resetChessboard(chessB);
     nowSelectedNum = 0;//游戏重新开始
@@ -238,7 +242,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     int n = onPressingBoard;
     int i = n / 10, j = n % 10;
     int x_t = i, y_t = j;
-    vvint & chessB = chessBoard->truth;
+    vvint & chessB = sudokuPower->truth;
     static int score = 0;
 
     if (chessB[x_t][y_t] == temp.toInt())//如果输入正确则填入
@@ -261,8 +265,12 @@ void MainWindow::addOneWrong()
         reply = QMessageBox ::question(this, tr("你输了！！！"),"是否重新开始？",QMessageBox::Ok|QMessageBox::Cancel);
         if(reply == QMessageBox::Ok)
         {
-            delete [] wrongLabel;
+            for(int i = 0; i < 3; ++i)
+            {
+                delete wrongLabel[i];
+            }
             wrongTime = 0;
+            //跳到重新开始当前难度
         }
         return;
     }

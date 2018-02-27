@@ -39,7 +39,7 @@ protected:
 private:
     Ui::MainWindow *ui;
     QPushButton chess[9][9];
-    MySudoku *chessBoard;//生成的数独数字
+    MySudoku *sudokuPower;//生成的数独数字
     int nowSelectedNum;
     int onPressingBoard;
     static int wrongTime;
