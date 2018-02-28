@@ -21,7 +21,7 @@ public:
     ~ChessBoardSceen();
 
 signals:
-
+    void beginningNewGame(int);
 private slots:
     void chessBoardClicked();
     void resetChessBoard(int gameLevel); //游戏重新开始，重新生成数独棋盘
@@ -49,7 +49,8 @@ private:
 private:
     void initChessboard();
     void highLightSelectedButtons(int aimmedNum);
-
+    void addOneWrite(QString temp);
+    void addOneWrong();
 };
 
 #endif // CHESSBOARDSCEEN_H

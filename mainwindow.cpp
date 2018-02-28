@@ -345,8 +345,6 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     QString temp(event->key());
     int n = onPressingBoard;
-    if(n < 0)
-        return; //没有按格子则忽略键盘按键
 
     int i = n / 10, j = n % 10;
     int x_t = i, y_t = j;

@@ -2,6 +2,7 @@
 #include "ui_chessboardsceen.h"
 
 #include <QGridLayout>
+#include <QMessageBox>
 
 int ChessBoardSceen::nowSelectedNum = 0;
 int ChessBoardSceen::nowGameHardLevel = 0;
@@ -21,8 +22,7 @@ ChessBoardSceen::ChessBoardSceen(QWidget *parent) :
 
     //开启布局，填入棋盘
     initChessboard();
-
-
+    connect(this, SIGNAL(beginningNewGame(int)),this, SLOT(resetChessBoard(int)));
 }
 
 ChessBoardSceen::~ChessBoardSceen()
@@ -166,6 +166,8 @@ void ChessBoardSceen::highLightSelectedButtons(int aimmedNum)
     }
 }
 
+
+
 void ChessBoardSceen::initChessboard()
 {
     sudokuPower = new MySudoku(HardLevel::easy);
@@ -217,51 +219,20 @@ void ChessBoardSceen::keyPressEvent(QKeyEvent *event)
 {
     QString temp(event->key());
     int n = onPressingBoard;
-    if(n < 0)
-        return; //没有按格子则忽略键盘按键
-
     int x_Pos = n / 10, y_Pos = n % 10;
+    vvint & chessTruth = sudokuPower->truth;
 
-    vvint & chessB = sudokuPower->truth;
-    static int gameScore = 0;
     if(temp == "H")
-        temp.setNum(chessB[x_Pos][y_Pos]);
+        temp.setNum(chessTruth[x_Pos][y_Pos]);
 
     if (n == -1 || chess[x_Pos][y_Pos].text() != "")//如果已经填入则不能再输入 //没有选中空白格子
     {
         return;
     }
 
-    if (chessB[x_Pos][y_Pos] == temp.toInt())//如果输入正确则填入
+    if (chessTruth[x_Pos][y_Pos] == temp.toInt())//如果输入正确则填入
     {
-        chess[x_Pos][y_Pos].setText(temp);
-        gameScore += 200;
-
-        if(--oneNumCorrectCount[temp.toInt()-1] == 0)
-        {
-            gameScore+= (3600 - timerCount)/*3600秒减当前秒数*/ * oneNumCorrectCount[temp.toInt()-1];/*当前完成的数字*/
-            gameScore+=10000;
-            qDebug()<<temp.toInt()<<" gameScore: "<<gameScore;
-        }
-
-        score->setNum(gameScore);
-        --emptyNum;
-        if(emptyNum == 0)   //胜利
-        {
-            gameScore = 0;
-            QMessageBox::StandardButton reply;
-            reply = QMessageBox ::question(this, tr("你赢了！！！"),"是否重新开始？",QMessageBox::Ok|QMessageBox::Cancel);
-            if(reply == QMessageBox::Ok)
-            {
-                for(int i = 0; i < wrongTime; ++i)
-                {
-                    delete wrongLabel[i];
-                }
-                wrongTime = 0;
-                emit(clickedBeginNewGameButton(nowGameHardLevel));
-            }
-            return;
-        }
+        addOneWrite(temp);
     }
     else
     {    //错误统计加一
@@ -269,6 +240,32 @@ void ChessBoardSceen::keyPressEvent(QKeyEvent *event)
     }
 }
 
+
+void ChessBoardSceen::addOneWrite(QString temp)
+{
+    int n = onPressingBoard;
+    int x_Pos = n / 10, y_Pos = n % 10;
+    chess[x_Pos][y_Pos].setText(temp);
+//计分
+    if(--everyNumCorrectCount[temp.toInt()-1] == 0)
+    {
+        score+= (3600 - timerCount)/*3600秒减当前秒数*/ * everyNumCorrectCount[temp.toInt()-1];/*当前完成的数字*/
+        score+=10000;
+        qDebug()<<temp.toInt()<<" score: "<<score;
+    }
+
+    score += 200;
+    --emptyNum;
+    if(emptyNum == 0)   //胜利
+    {
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox ::question(this, tr("你赢了！！！"),"是否重新开始？",QMessageBox::Ok|QMessageBox::Cancel);
+        if(reply == QMessageBox::Ok)
+        {
+            emit(beginningNewGame(nowGameHardLevel));
+        }
+    }
+}
 
 void ChessBoardSceen::addOneWrong()
 {
