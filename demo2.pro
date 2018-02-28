@@ -31,7 +31,8 @@ SOURCES += \
     logindialog.cpp \
     aboutdialog.cpp \
     mySudoku/mysudoku.cpp \
-    mySudoku/hardlevel.cpp
+    mySudoku/hardlevel.cpp \
+    chessboardsceen.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -39,12 +40,14 @@ HEADERS += \
     logindialog.h \
     aboutdialog.h \
     mySudoku/mysudoku.h \
-    mySudoku/hardlevel.h
+    mySudoku/hardlevel.h \
+    chessboardsceen.h
 
 FORMS += \
         mainwindow.ui \
     aboutdialog.ui \
-    logindialog.ui
+    logindialog.ui \
+    chessboardsceen.ui
 
 RESOURCES += \
     resource.qrc

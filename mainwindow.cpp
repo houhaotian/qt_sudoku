@@ -213,6 +213,13 @@ void MainWindow::resetChessboard(MySudoku & chessB)
 {
     QString temp;
     emptyNum = 0;
+    for(int i = 0; i < 9; ++i)
+    {
+        oneNumCorrectCount[i] = 0;
+        qDebug() << oneNumCorrectCount[i];
+    }
+
+
     for (int i = 0; i < 9; ++i)
     {
         for (int j = 0; j < 9; ++j)
@@ -338,6 +345,9 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     QString temp(event->key());
     int n = onPressingBoard;
+    if(n < 0)
+        return; //没有按格子则忽略键盘按键
+
     int i = n / 10, j = n % 10;
     int x_t = i, y_t = j;
     vvint & chessB = sudokuPower->truth;
@@ -387,15 +397,6 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void MainWindow::timerEvent(QTimerEvent *event)
-{
-    if(event->timerId() == timerId)
-    {
-        timerCount++;
-        //  qDebug() << timerId;
-    }
-}
-
 
 void MainWindow::addOneWrong()
 {
@@ -421,4 +422,14 @@ void MainWindow::addOneWrong()
     wrongLabel[wrongTime]->setVisible(1);
 
     ++wrongTime;
+}
+
+
+void MainWindow::timerEvent(QTimerEvent *event)
+{
+    if(event->timerId() == timerId)
+    {
+        timerCount++;
+        //  qDebug() << timerId;
+    }
 }
