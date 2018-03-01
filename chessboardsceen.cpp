@@ -3,6 +3,8 @@
 
 #include <QGridLayout>
 #include <QMessageBox>
+#include <QMouseEvent>
+#include <QDebug>
 
 int ChessBoardSceen::nowSelectedNum = 0;
 int ChessBoardSceen::nowGameHardLevel = 0;
@@ -22,6 +24,9 @@ ChessBoardSceen::ChessBoardSceen(QWidget *parent) :
 
     //开启布局，填入棋盘
     initChessboard();
+    timerId = startTimer(1000);
+    timerCount = 0;
+
     connect(this, SIGNAL(beginningNewGame(int)),this, SLOT(resetChessBoard(int)));
 }
 
@@ -101,6 +106,7 @@ void ChessBoardSceen::resetChessBoard(int gameLevel)
     nowEmptyButtonY = -1;
     emptyNum = 0;
     score = 0;
+    timerCount = 0;
 
     for(int i = 0; i < 9; ++i)
     {
@@ -269,26 +275,25 @@ void ChessBoardSceen::addOneWrite(QString temp)
 
 void ChessBoardSceen::addOneWrong()
 {
-    if (wrongTime > 2)  //最多错三次
+
+    if (wrongTime++ > 3)  //最多错三次
     {
         QMessageBox::StandardButton reply;
         reply = QMessageBox ::question(this, tr("你输了！！！"),"是否重新开始？",QMessageBox::Ok|QMessageBox::Cancel);
         if(reply == QMessageBox::Ok)
         {
-            for(int i = 0; i < 3; ++i)
-            {
-                delete wrongLabel[i];
-            }
-            wrongTime = 0;
-            emit(clickedBeginNewGameButton(nowGameHardLevel));
+            emit(beginningNewGame(nowGameHardLevel));
         }
         return;
     }
+}
 
-    wrongLabel[wrongTime] = new QLabel(ui->up);
-    wrongLabel[wrongTime]->setGeometry(QRect(ui->label_2->x() + 50 * (wrongTime + 1), ui->label_2->y(), 40, 40));
-    wrongLabel[wrongTime]->setStyleSheet(QStringLiteral("image: url(:/new/prefix1/mainico);"));
-    wrongLabel[wrongTime]->setVisible(1);
 
-    ++wrongTime;
+void ChessBoardSceen::timerEvent(QTimerEvent *event)
+{
+    if(event->timerId() == timerId)
+    {
+        ++timerCount;
+        //  qDebug() << timerId;
+    }
 }

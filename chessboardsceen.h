@@ -24,10 +24,11 @@ signals:
     void beginningNewGame(int);
 private slots:
     void chessBoardClicked();
-    void resetChessBoard(int gameLevel); //游戏重新开始，重新生成数独棋盘
+    void resetChessBoard(int gameLevel); //游戏重新开始入口，重新生成数独棋盘
 
 protected:
     virtual void keyPressEvent(QKeyEvent *event);
+    virtual void timerEvent(QTimerEvent *event);
 
 private:
     Ui::ChessBoardSceen *ui;
@@ -35,7 +36,6 @@ private:
     MySudoku *sudokuPower;  //生成的数独数字
     QPushButton chess[9][9];    //9X9棋盘
 
-    int everyNumCorrectCount[9];  //存放9个数字的未被猜对的个数
     static int nowGameHardLevel;   //当前游戏难度
     static int emptyNum;   //总共有多少未猜对的格子
     static int nowSelectedNum; //高亮选中的值
@@ -45,6 +45,9 @@ private:
     static int wrongTime;   //错误次数
     static int score;   //游戏得分
 
+    int everyNumCorrectCount[9];  //存放9个数字的未被猜对的个数
+    int timerId;    //设置定时器时间为1s
+    double timerCount;  //记录总时间
 
 private:
     void initChessboard();
