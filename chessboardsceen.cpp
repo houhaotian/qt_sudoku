@@ -22,16 +22,19 @@ ChessBoardSceen::ChessBoardSceen(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    //开启布局，填入棋盘
-    initChessboard();
     timerId = startTimer(1000);
     timerCount = 0;
+    sudokuPower = nullptr;
 
     connect(this, SIGNAL(beginningNewGame(int)),this, SLOT(resetChessBoard(int)));
+
+    //开启布局，填入棋盘
+    initChessboard();
 }
 
 ChessBoardSceen::~ChessBoardSceen()
 {
+    delete sudokuPower;
     delete ui;
 }
 
@@ -92,7 +95,7 @@ void ChessBoardSceen::chessBoardClicked()
 }
 
 void ChessBoardSceen::resetChessBoard(int gameLevel)
-{
+{ 
     delete sudokuPower;
     QString temp;
     sudokuPower = new MySudoku(gameLevel);
@@ -176,16 +179,7 @@ void ChessBoardSceen::highLightSelectedButtons(int aimmedNum)
 
 void ChessBoardSceen::initChessboard()
 {
-    sudokuPower = new MySudoku(HardLevel::easy);
-    nowGameHardLevel = HardLevel::easy;
-    MySudoku & shortNameSudoku = *sudokuPower;
     QGridLayout* chessboardLayout = new QGridLayout;
-    QString temp;
-
-    for(int i = 0; i < 9; ++i)
-    {
-        everyNumCorrectCount[i] = 0;
-    }
 
     for (int i = 0; i < 9; ++i)
     {
@@ -194,13 +188,6 @@ void ChessBoardSceen::initChessboard()
             chess[i][j].setFixedSize(40, 40);
             chessboardLayout->addWidget(&chess[i][j], i, j);
             chess[i][j].setAccessibleName(QString::number(i * 10 + j));//设置可以定位棋盘的别名
-            chess[i][j].setText(temp.setNum(shortNameSudoku[i][j]));
-            if (0 == shortNameSudoku[i][j])
-            {
-                ++emptyNum;
-                everyNumCorrectCount[shortNameSudoku.truth[i][j]-1]++;//记录下每个数有多少个空白格子，计分用
-                chess[i][j].setText("");
-            }
             connect(&chess[i][j], SIGNAL(clicked()), this, SLOT(chessBoardClicked()));
 
             chess[i][j].setStyleSheet(QLatin1String("background-color: #3366CC;\n"
@@ -208,16 +195,18 @@ void ChessBoardSceen::initChessboard()
                                                     "color: #ffffff;"));
         }
     }
-    chessboardLayout->setMargin(10);
+    chessboardLayout->setContentsMargins(2, 2, 2, 2);
     chessboardLayout->setVerticalSpacing(2);
     chessboardLayout->setHorizontalSpacing(2);
     for (int i = 0; i < 9; ++i)
     {
-        chessboardLayout->setColumnStretch(i, 0);
-        chessboardLayout->setRowStretch(i, 0);
+        chessboardLayout->setColumnStretch(i, 1);
+        chessboardLayout->setRowStretch(i, 1);
     }
     this->setLayout(chessboardLayout);
-    nowSelectedNum = 0;//游戏重新开始，高亮选中的值置0
+    this->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+    emit(beginningNewGame(HardLevel::easy));
 }
 
 
@@ -261,6 +250,7 @@ void ChessBoardSceen::addOneWrite(QString temp)
     }
 
     score += 200;
+    emit(playerHitPoint());
     --emptyNum;
     if(emptyNum == 0)   //胜利
     {
@@ -296,4 +286,9 @@ void ChessBoardSceen::timerEvent(QTimerEvent *event)
         ++timerCount;
         //  qDebug() << timerId;
     }
+}
+
+int ChessBoardSceen::getScore()
+{
+    return score;
 }

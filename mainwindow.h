@@ -10,7 +10,7 @@
 
 #include "mySudoku/mysudoku.h"
 #include "mySudoku/hardlevel.h"
-
+#include "chessboardsceen.h"
 
 namespace Ui {
 class MainWindow;
@@ -25,44 +25,22 @@ public:
     ~MainWindow();
 
 signals:
-    void clickedBeginNewGameButton(int);
+
 private slots:
     void onAboutTriggered();
-    void newGameClicked();
-    void chessBoardClicked();
+    void emitStartSignal();
 protected:
     virtual void paintEvent(QPaintEvent *);
-    virtual void keyPressEvent(QKeyEvent *event);
-    virtual void timerEvent(QTimerEvent *event);
 private:
-    Ui::MainWindow *ui;
-    QPushButton chess[9][9];
-    MySudoku *sudokuPower;//生成的数独数字
+    Ui::MainWindow *ui; 
     QLabel *wrongLabel[3];
     QAction * hardMenu[4];
     QLabel *score;
-
-    static int nowSelectedNum;
-    static int onPressingBoard;
-    static int wrongTime;
-    static int nowGameHardLevel;
-    static int nowEmptyButtonX;
-    static int nowEmptyButtonY;
-    static int emptyNum;
-
-    int timerId;
-    double timerCount;
-
-    int oneNumCorrectCount[9];
-
-
+    ChessBoardSceen *chessBoardWidget;
 private:
-    void initSudokuChessBoard();
     void putOnMenuItem();
     void putOnScoreLabel();
-    void highLightSelectedButtons(int aimmedNum);
-    void resetChessboard(MySudoku &chessB);
-    void addOneWrong();
+    void putOnChessBoardWidget();
 };
 
 #endif // MAINWINDOW_H

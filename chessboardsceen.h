@@ -20,8 +20,14 @@ public:
     explicit ChessBoardSceen(QWidget *parent = 0);
     ~ChessBoardSceen();
 
+    static int getScore();
+
 signals:
-    void beginningNewGame(int);
+    void beginningNewGame(int); //重新开始游戏信号
+    void playerHitPoint();
+    void playerHitWrong();
+    void playerHitReStart();
+
 private slots:
     void chessBoardClicked();
     void resetChessBoard(int gameLevel); //游戏重新开始入口，重新生成数独棋盘
@@ -42,6 +48,7 @@ private:
     static int nowEmptyButtonX; //记录上一次选中的空白格子的X下标
     static int nowEmptyButtonY; //记录上一次选中的空白格子的Y下标
     static int onPressingBoard; //选中的格子的名字
+
     static int wrongTime;   //错误次数
     static int score;   //游戏得分
 
