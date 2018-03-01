@@ -131,6 +131,7 @@ void ChessBoardSceen::resetChessBoard(int gameLevel)
             }
         }
     }
+    emit(playerHitReStart());
 }
 
 void ChessBoardSceen::highLightSelectedButtons(int aimmedNum)
@@ -265,7 +266,7 @@ void ChessBoardSceen::addOneWrite(QString temp)
 
 void ChessBoardSceen::addOneWrong()
 {
-
+#if 0
     if (wrongTime++ > 3)  //最多错三次
     {
         QMessageBox::StandardButton reply;
@@ -276,6 +277,9 @@ void ChessBoardSceen::addOneWrong()
         }
         return;
     }
+#endif
+    ++wrongTime;
+    emit(playerHitWrong());
 }
 
 
@@ -286,6 +290,16 @@ void ChessBoardSceen::timerEvent(QTimerEvent *event)
         ++timerCount;
         //  qDebug() << timerId;
     }
+}
+
+double ChessBoardSceen::getTimerCount() const
+{
+    return timerCount;
+}
+
+int ChessBoardSceen::getWrongTime()
+{
+    return wrongTime;
 }
 
 int ChessBoardSceen::getScore()

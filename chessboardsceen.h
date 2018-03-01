@@ -21,6 +21,9 @@ public:
     ~ChessBoardSceen();
 
     static int getScore();
+    static int getWrongTime();
+
+    double getTimerCount() const;
 
 signals:
     void beginningNewGame(int); //重新开始游戏信号
@@ -49,10 +52,10 @@ private:
     static int nowEmptyButtonY; //记录上一次选中的空白格子的Y下标
     static int onPressingBoard; //选中的格子的名字
 
+    int everyNumCorrectCount[9];  //存放9个数字的未被猜对的个数
+
     static int wrongTime;   //错误次数
     static int score;   //游戏得分
-
-    int everyNumCorrectCount[9];  //存放9个数字的未被猜对的个数
     int timerId;    //设置定时器时间为1s
     double timerCount;  //记录总时间
 

@@ -30,7 +30,8 @@ MainWindow::MainWindow(QWidget *parent) :
     putOnMenuItem();
     //添加score栏
     putOnScoreLabel();
-
+    //添加错误图片栏
+    putOnWrongLabelContainer();
 }
 
 MainWindow::~MainWindow()
@@ -68,11 +69,53 @@ void MainWindow::putOnScoreLabel()
     score->setFont(font1);
     score->setStyleSheet(QStringLiteral("color: rgb(245, 245, 245);r"));
     score->setNum(0);//清空得分
+    connect(chessBoardWidget, &ChessBoardSceen::playerHitPoint, this, &getScoreFromChessBoardChild);
 }
 
 void MainWindow::putOnChessBoardWidget()
 {
     chessBoardWidget = new ChessBoardSceen(ui->right);
+}
+
+void MainWindow::putOnWrongLabelContainer()
+{
+    QFont font1;
+    font1.setFamily(QStringLiteral("Consolas"));
+    font1.setPointSize(11);
+    font1.setBold(true);
+    font1.setWeight(75);
+
+    QHBoxLayout *upHLayout = new QHBoxLayout(ui->up);
+    QLabel * wrongItem = new QLabel("错误:");
+    wrongItem->setFont(font1);
+    wrongItem->setStyleSheet("color:#ffffff;");
+
+    wrongLabelContainer = new QWidget;
+    upHLayout->addWidget(wrongItem);
+    upHLayout->addWidget(wrongLabelContainer);
+    upHLayout->setStretch(1,6);
+    QHBoxLayout *upHLayout2 = new QHBoxLayout;
+    wrongLabelContainer->setLayout(upHLayout2);
+
+    connect(chessBoardWidget, &ChessBoardSceen::playerHitWrong, this, &monitorWrongNum);
+}
+
+void MainWindow::monitorWrongNum()
+{
+    int i = chessBoardWidget->getWrongTime();
+    if(i > 3)
+    {
+        //游戏失败
+        //不要弹出窗口
+    }
+#if 1
+    qDebug()<<i;
+    QLabel *wrongLabel = new QLabel(wrongLabelContainer);
+    //  wrongLabel->setGeometry(QRect(ui->label_2->x() + 50 * (wrongTime + 1), ui->label_2->y(), 40, 40));
+    wrongLabel->resize(40,40);
+    wrongLabel->setStyleSheet(QStringLiteral("image: url(:/new/prefix1/mainico);"));
+    wrongLabel->setVisible(1);
+#endif
 }
 
 void MainWindow::paintEvent(QPaintEvent *)
@@ -138,4 +181,9 @@ void MainWindow::emitStartSignal()
             return;
         }
     }
+}
+
+void MainWindow::getScoreFromChessBoardChild()
+{
+    score->setNum(chessBoardWidget->getScore());
 }
