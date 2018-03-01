@@ -99,7 +99,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QWidget" name="right" native="true"/>
+        <widget class="QWidget" name="right" native="true">
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

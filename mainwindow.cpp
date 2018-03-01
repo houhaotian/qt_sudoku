@@ -74,7 +74,10 @@ void MainWindow::putOnScoreLabel()
 
 void MainWindow::putOnChessBoardWidget()
 {
-    chessBoardWidget = new ChessBoardSceen(ui->right);
+    chessBoardWidget = new ChessBoardSceen;
+    QHBoxLayout *templayout = new QHBoxLayout;
+    templayout->addWidget(chessBoardWidget);
+    ui->right->setLayout(templayout);
 }
 
 void MainWindow::putOnWrongLabelContainer()
@@ -85,8 +88,8 @@ void MainWindow::putOnWrongLabelContainer()
     font1.setBold(true);
     font1.setWeight(75);
 
-    QHBoxLayout *upHLayout = new QHBoxLayout(ui->up);
-    QLabel * wrongItem = new QLabel("错误:");
+    upHLayout = new QHBoxLayout(ui->up);
+    wrongItem = new QLabel("错误:");
     wrongItem->setFont(font1);
     wrongItem->setStyleSheet("color:#ffffff;");
 
@@ -94,10 +97,13 @@ void MainWindow::putOnWrongLabelContainer()
     upHLayout->addWidget(wrongItem);
     upHLayout->addWidget(wrongLabelContainer);
     upHLayout->setStretch(1,6);
-    QHBoxLayout *upHLayout2 = new QHBoxLayout;
-    wrongLabelContainer->setLayout(upHLayout2);
+    wrongLabelContainerLayout = new QHBoxLayout;
+    wrongLabelContainerLayout->setAlignment(Qt::AlignLeft);
+    wrongLabelContainer->setLayout(wrongLabelContainerLayout);
 
     connect(chessBoardWidget, &ChessBoardSceen::playerHitWrong, this, &monitorWrongNum);
+    connect(chessBoardWidget, &ChessBoardSceen::playerHitReStart, this, &monitorRestartGame);
+
 }
 
 void MainWindow::monitorWrongNum()
@@ -107,15 +113,16 @@ void MainWindow::monitorWrongNum()
     {
         //游戏失败
         //不要弹出窗口
+        return;
     }
-#if 1
     qDebug()<<i;
-    QLabel *wrongLabel = new QLabel(wrongLabelContainer);
-    //  wrongLabel->setGeometry(QRect(ui->label_2->x() + 50 * (wrongTime + 1), ui->label_2->y(), 40, 40));
-    wrongLabel->resize(40,40);
+    QLabel *wrongLabel = new QLabel;
+
     wrongLabel->setStyleSheet(QStringLiteral("image: url(:/new/prefix1/mainico);"));
+    wrongLabel->setMinimumSize(40,40);
     wrongLabel->setVisible(1);
-#endif
+    wrongLabelContainerLayout->addWidget(wrongLabel);
+
 }
 
 void MainWindow::paintEvent(QPaintEvent *)
@@ -127,18 +134,17 @@ void MainWindow::paintEvent(QPaintEvent *)
     penType.setColor(Qt::darkBlue);
     painter.setPen(penType);
 
-
     int x0 = (ui->down->x()) + 90;
     int y0 = ui->down->y() + 38;
     //  painter.drawLine(x0, y0, x0, 400);
 
-    int x1 = x0 + 3* 40 +7;
+    int x1 = x0 + 3* 40 +9;
     painter.drawLine(x1, y0, x1 , 480);
-    x1 += 3 * 40 + 9;
+    x1 += 3 * 40 + 7;
     painter.drawLine(x1 , y0, x1 , 480);
     int y1 = y0 + 3* 40 + 5;
     painter.drawLine(x0 , y1, 475 , y1);
-    y1 += 3* 40 + 5;
+    y1 += 3* 40 + 7;
     painter.drawLine(x0 , y1, 475 , y1);
 
 #if 0
@@ -186,4 +192,18 @@ void MainWindow::emitStartSignal()
 void MainWindow::getScoreFromChessBoardChild()
 {
     score->setNum(chessBoardWidget->getScore());
+}
+
+
+void MainWindow::monitorRestartGame()
+{
+    score->setNum(0);
+    //删掉wrongLabelContainer
+    delete wrongLabelContainer;
+    wrongLabelContainer = new QWidget;
+    upHLayout->addWidget(wrongLabelContainer);
+    upHLayout->setStretch(1,6);
+    wrongLabelContainerLayout = new QHBoxLayout;
+    wrongLabelContainerLayout->setAlignment(Qt::AlignLeft);
+    wrongLabelContainer->setLayout(wrongLabelContainerLayout);
 }
