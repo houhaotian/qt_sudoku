@@ -85,8 +85,8 @@ void MainWindow::putOnWrongLabelContainer()
     font1.setBold(true);
     font1.setWeight(75);
 
-    QHBoxLayout *upHLayout = new QHBoxLayout(ui->up);
-    QLabel * wrongItem = new QLabel("错误:");
+    upHLayout = new QHBoxLayout(ui->up);
+    wrongItem = new QLabel("错误:");
     wrongItem->setFont(font1);
     wrongItem->setStyleSheet("color:#ffffff;");
 
@@ -94,10 +94,13 @@ void MainWindow::putOnWrongLabelContainer()
     upHLayout->addWidget(wrongItem);
     upHLayout->addWidget(wrongLabelContainer);
     upHLayout->setStretch(1,6);
-    QHBoxLayout *upHLayout2 = new QHBoxLayout;
-    wrongLabelContainer->setLayout(upHLayout2);
+    wrongLabelContainerLayout = new QHBoxLayout;
+    wrongLabelContainerLayout->setAlignment(Qt::AlignLeft);
+    wrongLabelContainer->setLayout(wrongLabelContainerLayout);
 
     connect(chessBoardWidget, &ChessBoardSceen::playerHitWrong, this, &monitorWrongNum);
+    connect(chessBoardWidget, &ChessBoardSceen::playerHitReStart, this, &monitorRestartGame);
+
 }
 
 void MainWindow::monitorWrongNum()
@@ -107,15 +110,16 @@ void MainWindow::monitorWrongNum()
     {
         //游戏失败
         //不要弹出窗口
+        return;
     }
-#if 1
     qDebug()<<i;
-    QLabel *wrongLabel = new QLabel(wrongLabelContainer);
-    //  wrongLabel->setGeometry(QRect(ui->label_2->x() + 50 * (wrongTime + 1), ui->label_2->y(), 40, 40));
-    wrongLabel->resize(40,40);
+    QLabel *wrongLabel = new QLabel;
+
     wrongLabel->setStyleSheet(QStringLiteral("image: url(:/new/prefix1/mainico);"));
+    wrongLabel->setMinimumSize(40,40);
     wrongLabel->setVisible(1);
-#endif
+    wrongLabelContainerLayout->addWidget(wrongLabel);
+
 }
 
 void MainWindow::paintEvent(QPaintEvent *)
@@ -186,4 +190,18 @@ void MainWindow::emitStartSignal()
 void MainWindow::getScoreFromChessBoardChild()
 {
     score->setNum(chessBoardWidget->getScore());
+}
+
+
+void MainWindow::monitorRestartGame()
+{
+    score->setNum(0);
+    //删掉wrongLabelContainer
+    delete wrongLabelContainer;
+    wrongLabelContainer = new QWidget;
+    upHLayout->addWidget(wrongLabelContainer);
+    upHLayout->setStretch(1,6);
+    wrongLabelContainerLayout = new QHBoxLayout;
+    wrongLabelContainerLayout->setAlignment(Qt::AlignLeft);
+    wrongLabelContainer->setLayout(wrongLabelContainerLayout);
 }

@@ -6,6 +6,7 @@
 #include <QLabel>
 #include <QAction>
 #include<QVector>
+#include <QBoxLayout>
 
 
 #include "mySudoku/mysudoku.h"
@@ -31,6 +32,7 @@ private slots:
     void emitStartSignal();//处理菜单栏开始游戏按键对应操作
     void getScoreFromChessBoardChild();//监控得分
     void monitorWrongNum();//监控错误
+    void monitorRestartGame();//如果重新开始游戏要清空label,score
 
 protected:
     virtual void paintEvent(QPaintEvent *);
@@ -39,7 +41,11 @@ private:
     QAction * hardMenu[4];//菜单栏四个开始按钮
     QLabel *score;  //显示得分的label
     ChessBoardSceen *chessBoardWidget;  //棋盘子控件
+    /*上边栏子控件*/
     QWidget * wrongLabelContainer;
+    QHBoxLayout *wrongLabelContainerLayout;
+    QHBoxLayout *upHLayout;
+    QLabel * wrongItem;
 private:
     void putOnMenuItem();
     void putOnScoreLabel();
