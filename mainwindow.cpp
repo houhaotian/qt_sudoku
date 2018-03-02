@@ -24,6 +24,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     this->setWindowTitle(tr("我的小数独"));
 
+    timerId = startTimer(1000);
+    timerCount = 0;
     //添加棋盘
     putOnChessBoardWidget();
     //添加菜单栏
@@ -56,20 +58,28 @@ void MainWindow::putOnMenuItem()
 }
 
 void MainWindow::putOnScoreLabel()
-{
-    //score添加
-    score = new QLabel(ui->left);
-    score->setObjectName(QStringLiteral("score"));
-    score->setGeometry(QRect(10, 50, 54, 21));
+{  
     QFont font1;
     font1.setFamily(QStringLiteral("Consolas"));
     font1.setPointSize(11);
     font1.setBold(true);
     font1.setWeight(75);
+
+    //score添加
+    score = new QLabel(ui->left);
+    score->setObjectName(QStringLiteral("score"));
+    score->setGeometry(QRect(10, 50, 54, 21));
     score->setFont(font1);
     score->setStyleSheet(QStringLiteral("color: rgb(245, 245, 245);r"));
     score->setNum(0);//清空得分
     connect(chessBoardWidget, &ChessBoardSceen::playerHitPoint, this, &getScoreFromChessBoardChild);
+
+    timeLabel = new QLabel(ui->left);
+    timeLabel->setFont(font1);
+    timeLabel->setStyleSheet(QStringLiteral("color: rgb(245, 245, 245);r"));
+    timeLabel->setNum(0);//清空时间
+    timeLabel->setGeometry(score->geometry());
+    timeLabel->move(10, 140);
 }
 
 void MainWindow::putOnChessBoardWidget()
@@ -88,15 +98,13 @@ void MainWindow::putOnWrongLabelContainer()
     font1.setBold(true);
     font1.setWeight(75);
 
-    upHLayout = new QHBoxLayout(ui->up);
-    wrongItem = new QLabel("错误:");
+    wrongItem = new QLabel("错误:",ui->up);
     wrongItem->setFont(font1);
     wrongItem->setStyleSheet("color:#ffffff;");
+    wrongItem->setGeometry(ui->up->x()+15,ui->up->height()/2,80,20);
 
-    wrongLabelContainer = new QWidget;
-    upHLayout->addWidget(wrongItem);
-    upHLayout->addWidget(wrongLabelContainer);
-    upHLayout->setStretch(1,6);
+    wrongLabelContainer = new QWidget(ui->up);
+    wrongLabelContainer->setGeometry(90, 0, 350, 70);
     wrongLabelContainerLayout = new QHBoxLayout;
     wrongLabelContainerLayout->setAlignment(Qt::AlignLeft);
     wrongLabelContainer->setLayout(wrongLabelContainerLayout);
@@ -113,13 +121,14 @@ void MainWindow::monitorWrongNum()
     {
         //游戏失败
         //不要弹出窗口
+        wrongItem->setText(tr("游戏失败！"));
+        wrongItem->setStyleSheet("color:#ff0000");
         return;
     }
-    qDebug()<<i;
-    QLabel *wrongLabel = new QLabel;
 
+    QLabel *wrongLabel = new QLabel(wrongLabelContainer);
     wrongLabel->setStyleSheet(QStringLiteral("image: url(:/new/prefix1/mainico);"));
-    wrongLabel->setMinimumSize(40,40);
+    wrongLabel->setFixedSize(30,30);
     wrongLabel->setVisible(1);
     wrongLabelContainerLayout->addWidget(wrongLabel);
 
@@ -167,6 +176,15 @@ void MainWindow::paintEvent(QPaintEvent *)
 #endif
 }
 
+
+void MainWindow::timerEvent(QTimerEvent *event)
+{
+    if(event->timerId() == timerId)
+    {
+         timeLabel->setNum(++timerCount);
+    }
+}
+
 void MainWindow::onAboutTriggered()
 {
     AboutDialog abtDlg;
@@ -182,7 +200,6 @@ void MainWindow::emitStartSignal()
     {
         if(senderName == stringHardLevel[x])
         {
-          //  qDebug() << x;
             emit(chessBoardWidget->beginningNewGame(x));
             return;
         }
@@ -197,13 +214,18 @@ void MainWindow::getScoreFromChessBoardChild()
 
 void MainWindow::monitorRestartGame()
 {
-    score->setNum(0);
+    timerCount = 0;
+    score->setNum(0);//清空得分
+    timeLabel->setNum(0);//清空时间
     //删掉wrongLabelContainer
     delete wrongLabelContainer;
-    wrongLabelContainer = new QWidget;
-    upHLayout->addWidget(wrongLabelContainer);
-    upHLayout->setStretch(1,6);
+    wrongLabelContainer = new QWidget(ui->up);
+    wrongLabelContainer->setGeometry(90, 0, 350, 70);
     wrongLabelContainerLayout = new QHBoxLayout;
     wrongLabelContainerLayout->setAlignment(Qt::AlignLeft);
     wrongLabelContainer->setLayout(wrongLabelContainerLayout);
+    wrongLabelContainer->setVisible(1);
+
+    wrongItem->setText(tr("错误："));
+    wrongItem->setStyleSheet("color:#ffffff");
 }

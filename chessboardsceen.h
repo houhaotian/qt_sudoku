@@ -27,9 +27,9 @@ public:
 
 signals:
     void beginningNewGame(int); //重新开始游戏信号
-    void playerHitPoint();
-    void playerHitWrong();
-    void playerHitReStart();
+    void playerHitPoint();  //发送得分信号
+    void playerHitWrong();  //发送错误信号
+    void playerHitReStart();    //发送重新开始信号
 
 private slots:
     void chessBoardClicked();

@@ -142,9 +142,15 @@ void ChessBoardSceen::highLightSelectedButtons(int aimmedNum)
         for (int j = 0; j < 9; ++j)
         {
             if (aimmedNum == chess[i][j].text().toInt()) {
-                chess[i][j].setStyleSheet(QLatin1String("background-color: #55aa7f;\n"
+                /*    chess[i][j].setStyleSheet(QLatin1String("background-color: #55aa7f;\n"
                     "font: 14pt \"Microsoft YaHei UI\";\n"
                     "color: #000000;"));
+            */
+                chess[i][j].setStyleSheet("QPushButton{border-color:#00ff00;"
+                                          "border-style:solid;border-width:2;"
+                                          "background-color: #3366CC;"
+                                          "font: 14pt \"Microsoft YaHei UI\";"
+                                          "color: #ffffff;}");
             }
         }
     }
@@ -242,6 +248,8 @@ void ChessBoardSceen::addOneWrite(QString temp)
     int n = onPressingBoard;
     int x_Pos = n / 10, y_Pos = n % 10;
     chess[x_Pos][y_Pos].setText(temp);
+    highLightSelectedButtons(temp.toInt());
+
 //计分
     if(--everyNumCorrectCount[temp.toInt()-1] == 0)
     {

@@ -36,16 +36,24 @@ private slots:
 
 protected:
     virtual void paintEvent(QPaintEvent *);
+    virtual void timerEvent(QTimerEvent *event);
+
 private:
     Ui::MainWindow *ui;
     QAction * hardMenu[4];//菜单栏四个开始按钮
     QLabel *score;  //显示得分的label
     ChessBoardSceen *chessBoardWidget;  //棋盘子控件
+    QLabel *timeLabel;  //显示得分的label
+
     /*上边栏子控件*/
     QWidget * wrongLabelContainer;
     QHBoxLayout *wrongLabelContainerLayout;
     QHBoxLayout *upHLayout;
     QLabel * wrongItem;
+
+    int timerId;    //设置定时器时间为1s
+    double timerCount;  //记录总时间
+
 private:
     void putOnMenuItem();
     void putOnScoreLabel();
