@@ -1,6 +1,6 @@
-#include "logindialog.h"
+﻿#include "logindialog.h"
 #include "ui_logindialog.h"
-#include "publictitlebar.h"
+#include "publicTitleBar.h"
 #include "aboutdialog.h"
 
 
@@ -9,17 +9,17 @@
 
 
 
-LoginDialog::LoginDialog(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::loginDialog)
+LoginDialog::LoginDialog(QWidget *parent)
+    : QDialog(parent)
+    , ui(new Ui::loginDialog)
 {
     ui->setupUi(this);
     //去掉标题栏
     this->setWindowFlags(Qt::FramelessWindowHint);
 
-    publicTitleBar *titleBar = new publicTitleBar;
+    publicTitleBar *titleBar = new publicTitleBar();
     titleBar->setCloseBtnBg("/new/prefix1/closeBtn");
-    titleBar->setTitle("我的小数独");
+    titleBar->setTitle(QStringLiteral("我的小数独"));
     titleBar->setIcon("/new/prefix1/loginLogo");
 
 

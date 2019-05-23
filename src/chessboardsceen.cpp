@@ -1,10 +1,11 @@
-#include "chessboardsceen.h"
+﻿#include "chessboardsceen.h"
 #include "ui_chessboardsceen.h"
 
 #include <QGridLayout>
 #include <QMessageBox>
 #include <QMouseEvent>
 #include <QDebug>
+#include "../SudokuLib/mysudoku.h"
 
 int ChessBoardSceen::nowSelectedNum = 0;
 int ChessBoardSceen::nowGameHardLevel = 0;
@@ -98,7 +99,7 @@ void ChessBoardSceen::resetChessBoard(int gameLevel)
 { 
     delete sudokuPower;
     QString temp;
-    sudokuPower = new MySudoku(gameLevel);
+    sudokuPower = new MySudoku((HardLevel::Levels)(gameLevel));
     MySudoku & shortNameSudoku = *sudokuPower;
 
     wrongTime = 0;
@@ -136,50 +137,52 @@ void ChessBoardSceen::resetChessBoard(int gameLevel)
 
 void ChessBoardSceen::highLightSelectedButtons(int aimmedNum)
 {
-    /*高亮选中数字*/
-    for (int i = 0; i < 9; ++i)
-    {
-        for (int j = 0; j < 9; ++j)
-        {
-            if (aimmedNum == chess[i][j].text().toInt()) {
-                /*    chess[i][j].setStyleSheet(QLatin1String("background-color: #55aa7f;\n"
-                    "font: 14pt \"Microsoft YaHei UI\";\n"
-                    "color: #000000;"));
-            */
-                chess[i][j].setStyleSheet("QPushButton{border-color:#00ff00;"
-                                          "border-style:solid;border-width:2;"
-                                          "background-color: #3366CC;"
-                                          "font: 14pt \"Microsoft YaHei UI\";"
-                                          "color: #ffffff;}");
-            }
-        }
-    }
-    /*如果是刚开始游戏，则记录选中的值*/
-    if (nowSelectedNum == 0)
-    {
-        nowSelectedNum = aimmedNum;
-    }
-    /*否则还原上一次选中的值*/
-    else
-    {
-        for (int i = 0; i < 9; ++i)
-        {
-            for (int j = 0; j < 9; ++j)
-            {
-                if (nowSelectedNum == chess[i][j].text().toInt()) {
-
-                    chess[i][j].setStyleSheet(QLatin1String("background-color: #3366CC;\n"
-                                                            "font: 14pt \"Microsoft YaHei UI\";\n"
-                                                            "color: #ffffff;"));
-                }
-            }
-        }
-        /*如果点击已经选中的值，则清0*/
-        if (nowSelectedNum == aimmedNum)
-            nowSelectedNum = 0;
-        else
-            nowSelectedNum = aimmedNum;
-    }
+    //    /*高亮选中数字*/
+    //    for (int i = 0; i < 9; ++i)
+    //    {
+    //        for (int j = 0; j < 9; ++j)
+    //        {
+    //            if (aimmedNum == chess[i][j].text().toInt()) {
+    //                QString qss("background-color: #55aa7f;\n");
+    //                qss.append("font: 14pt \"Microsoft YaHei UI\";\n");
+    //                qss.append("color: #000000;");
+    //                chess[i][j].setStyleSheet(qss);
+    //
+    //                qss="QPushButton{border-color:#00ff00;";
+    //                qss.append("border-style:solid;border-width:2;");
+    //                qss.append("background-color: #3366CC;");
+    //                qss.append("font: 14pt \"Microsoft YaHei UI\";");
+    //                qss.append("color: #ffffff;}");
+    //                chess[i][j].setStyleSheet(qss);
+    //            }
+    //        }
+    //    }
+    //    /*如果是刚开始游戏，则记录选中的值*/
+    //    if (nowSelectedNum == 0)
+    //    {
+    //        nowSelectedNum = aimmedNum;
+    //    }
+    //    /*否则还原上一次选中的值*/
+    //    else
+    //    {
+    //        for (int i = 0; i < 9; ++i)
+    //        {
+    //            for (int j = 0; j < 9; ++j)
+    //            {
+    //                if (nowSelectedNum == chess[i][j].text().toInt()) {
+    //                    QString qss("background-color: #3366CC;\n");
+    //                    qss.append("font: 14pt \"Microsoft YaHei UI\";\n");
+    //                    qss.append("color: #ffffff;");
+    //                    chess[i][j].setStyleSheet(qss);
+    //                }
+    //            }
+    //        }
+    //        /*如果点击已经选中的值，则清0*/
+    //        if (nowSelectedNum == aimmedNum)
+    //            nowSelectedNum = 0;
+    //        else
+    //            nowSelectedNum = aimmedNum;
+    //    }
 }
 
 

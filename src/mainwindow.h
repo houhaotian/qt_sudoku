@@ -1,4 +1,4 @@
-#ifndef MAINWINDOW_H
+﻿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include <QMainWindow>
@@ -8,14 +8,14 @@
 #include<QVector>
 #include <QBoxLayout>
 
-
-#include "mySudoku/mysudoku.h"
-#include "mySudoku/hardlevel.h"
-#include "chessboardsceen.h"
+#include "../SudokuLib/hardlevel.h"
+#include "../SudokuLib/mysudoku.h"
 
 namespace Ui {
 class MainWindow;
 }
+
+class ChessBoardSceen;
 
 class MainWindow : public QMainWindow
 {

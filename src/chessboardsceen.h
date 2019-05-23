@@ -1,16 +1,15 @@
-#ifndef CHESSBOARDSCEEN_H
+﻿#ifndef CHESSBOARDSCEEN_H
 #define CHESSBOARDSCEEN_H
 
 #include <QPushButton>
 #include <QWidget>
-
-
-#include "mySudoku/mysudoku.h"
-#include "mySudoku/hardlevel.h"
+#include "../SudokuLib/hardlevel.h"
 
 namespace Ui {
 class ChessBoardSceen;
 }
+
+class MySudoku;
 
 class ChessBoardSceen : public QWidget
 {

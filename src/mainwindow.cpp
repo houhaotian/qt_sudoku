@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QBoxLayout>
 #include <QPushButton>
@@ -12,17 +12,20 @@
 
 #include "publictitlebar.h"
 #include "aboutdialog.h"
+#include "chessboardsceen.h"
 
+
+#pragma execution_character_set("utf-8")
 
 ::QString stringHardLevel[4] = { "简单","中等","困难","地狱" };
 
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent)
+    , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    this->setWindowTitle(tr("我的小数独"));
+    this->setWindowTitle(QStringLiteral("我的小数独"));
 
     timerId = startTimer(1000);
     timerCount = 0;
@@ -72,7 +75,7 @@ void MainWindow::putOnScoreLabel()
     score->setFont(font1);
     score->setStyleSheet(QStringLiteral("color: rgb(245, 245, 245);r"));
     score->setNum(0);//清空得分
-    connect(chessBoardWidget, &ChessBoardSceen::playerHitPoint, this, &getScoreFromChessBoardChild);
+    connect(chessBoardWidget, &ChessBoardSceen::playerHitPoint, this, &MainWindow::getScoreFromChessBoardChild);
 
     timeLabel = new QLabel(ui->left);
     timeLabel->setFont(font1);
@@ -109,8 +112,8 @@ void MainWindow::putOnWrongLabelContainer()
     wrongLabelContainerLayout->setAlignment(Qt::AlignLeft);
     wrongLabelContainer->setLayout(wrongLabelContainerLayout);
 
-    connect(chessBoardWidget, &ChessBoardSceen::playerHitWrong, this, &monitorWrongNum);
-    connect(chessBoardWidget, &ChessBoardSceen::playerHitReStart, this, &monitorRestartGame);
+    connect(chessBoardWidget, &ChessBoardSceen::playerHitWrong, this, &MainWindow::monitorWrongNum);
+    connect(chessBoardWidget, &ChessBoardSceen::playerHitReStart, this, &MainWindow::monitorRestartGame);
 
 }
 

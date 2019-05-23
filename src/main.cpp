@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include <QApplication>
 #include <QDesktopWidget>
-#include <logindialog.h>
+#include "logindialog.h"
 
 
 int main(int argc, char *argv[])
