@@ -25,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    this->setWindowTitle(QStringLiteral("我的小数独"));
+    this->setWindowTitle("我的小数独");
 
     timerId = startTimer(1000);
     timerCount = 0;
